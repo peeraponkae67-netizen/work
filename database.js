@@ -4,7 +4,7 @@ const mysql = require('mysql2/promise');
 const dbConfig = {
   host: 'localhost',
   user: 'root',
-  password: 'rootroot',   // รหัสผ่าน phpMyAdmin / MySQL
+  password: '',   // รหัสผ่าน phpMyAdmin / MySQL
   database: 'thibest_db', // ชื่อฐานข้อมูล
   port: 3306,             // พอร์ต MySQL
   waitForConnections: true,
