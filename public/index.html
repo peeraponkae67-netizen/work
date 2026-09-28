@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thibest Clothes | สไตล์ Mercular</title>
+  
+  <!-- Google Fonts: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            mercular: {
+              blue: '#1b4cff',
+              light: '#f2f5ff',
+              dark: '#002bc4',
+              bg: '#f8f9fa'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbar to match clean look */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+    body { background-color: #fff; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="text-slate-800 font-sans antialiased pb-20">
+
+  <!-- 1. Top Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-[1200px] mx-auto px-4 h-[72px] flex items-center justify-between gap-4">
+      
+      <!-- Logo & Categories Button -->
+      <div class="flex items-center gap-6">
+        <a href="#" class="text-2xl font-bold text-slate-900 tracking-tighter flex items-center gap-1">
+          <span class="text-mercular-blue text-3xl">👕</span> thibest.
+        </a>
+        <button class="hidden md:flex items-center gap-2 bg-mercular-light text-mercular-blue px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-100 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          สินค้าทั้งหมด
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-[600px] relative">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="ค้นหาเสื้อผ้า, กางเกง..." 
+          class="w-full bg-gray-100 border border-transparent focus:border-mercular-blue focus:bg-white focus:ring-4 focus:ring-mercular-light rounded-full py-2.5 pl-12 pr-4 text-sm transition-all outline-none"
+        >
+        <div class="absolute left-1 top-1 w-8 h-8 bg-mercular-blue rounded-full flex items-center justify-center text-white pointer-events-none">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </div>
+      </div>
+
+      <!-- Right Actions (Cart, Login, Add Product) -->
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3 border-r border-gray-200 pr-4">
+          <button class="text-gray-600 hover:text-mercular-blue transition relative">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <span id="statTotalItems" class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white">0</span>
+          </button>
+        </div>
+        
+        <button id="btnLogin" onclick="openLoginModal()" class="hidden md:flex items-center gap-2 bg-mercular-blue hover:bg-mercular-dark text-white text-sm font-medium px-5 py-2.5 rounded-full transition shadow-lg shadow-mercular-blue/30 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+          เข้าสู่ระบบ
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- 2. Navigation Categories -->
+  <nav class="border-b border-gray-100 bg-white">
+    <div class="max-w-[1200px] mx-auto px-4 flex items-center overflow-x-auto hide-scrollbar gap-2 py-2">
+      <button class="px-4 py-1.5 bg-gray-100 text-gray-700 text-[13px] font-medium rounded-md whitespace-nowrap hover:bg-gray-200 transition">บทความ</button>
+      <button class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">เสื้อยืด</button>
+      <button class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">เสื้อเชิ้ต</button>
+      <button class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">กางเกง</button>
+      <button class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">เสื้อกันหนาว/ฮู้ด</button>
+      <button class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">อุปกรณ์เสริม</button>
+    </div>
+  </nav>
+
+  <main class="max-w-[1200px] mx-auto px-4 pt-6">
+    
+    <!-- 3. Hero Section (Grid: Banner + Best Seller) -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-8">
+      
+      <!-- Main Banner (Left) -->
+      <div class="lg:col-span-8 bg-slate-900 rounded-2xl overflow-hidden relative aspect-[21/9] lg:aspect-auto flex items-center">
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&q=80" alt="Banner" class="absolute inset-0 w-full h-full object-cover opacity-50">
+        <div class="relative z-10 p-8 lg:p-12 text-white">
+          <h2 class="text-4xl lg:text-5xl font-bold mb-4 tracking-tight leading-tight">
+            อัปเดตสไตล์<br>ให้เป็นตัวคุณ
+          </h2>
+          <button class="bg-mercular-blue hover:bg-mercular-dark text-white px-8 py-3 rounded-full font-semibold transition mt-2">
+            SHOP NOW
+          </button>
+        </div>
+      </div>
+
+      <!-- Best Seller (Right) -->
+      <div class="lg:col-span-4 bg-mercular-blue rounded-2xl p-4 flex flex-col relative overflow-hidden">
+        <!-- Abstract bg pattern -->
+        <div class="absolute -top-20 -right-20 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl"></div>
+        
+        <h3 class="text-white font-bold text-lg mb-3 flex items-center gap-2 relative z-10">
+          🔥 Best Seller เสื้อผ้า
+        </h3>
+        
+        <div class="flex flex-col gap-2 relative z-10 flex-1" id="bestSellerList">
+          <!-- Rendered by JS -->
+          <div class="bg-white rounded-xl p-3 flex items-center gap-4 animate-pulse">
+            <div class="w-16 h-16 bg-gray-200 rounded-lg"></div>
+            <div class="flex-1 space-y-2"><div class="h-4 bg-gray-200 rounded w-3/4"></div><div class="h-3 bg-gray-200 rounded w-1/2"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Category Circles -->
+    <section class="flex justify-between overflow-x-auto hide-scrollbar gap-4 mb-8 py-2">
+      <div class="flex flex-col items-center gap-2 min-w-[70px] cursor-pointer group">
+        <div class="w-[60px] h-[60px] rounded-full border border-gray-200 bg-white flex items-center justify-center p-2 group-hover:border-mercular-blue transition overflow-hidden">
+          <span class="text-xs font-bold text-amber-500">NEW</span>
+        </div>
+        <span class="text-[11px] text-gray-700 font-medium group-hover:text-mercular-blue">สินค้าใหม่</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 min-w-[70px] cursor-pointer group" onclick="filterCategory('เสื้อยืด')">
+        <div class="w-[60px] h-[60px] rounded-full border border-gray-200 bg-white p-1 group-hover:border-mercular-blue transition overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=100&q=80" class="w-full h-full object-cover rounded-full" alt="T-Shirt">
+        </div>
+        <span class="text-[11px] text-gray-700 font-medium group-hover:text-mercular-blue">เสื้อยืด</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 min-w-[70px] cursor-pointer group" onclick="filterCategory('เสื้อเชิ้ต')">
+        <div class="w-[60px] h-[60px] rounded-full border border-gray-200 bg-white p-1 group-hover:border-mercular-blue transition overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=100&q=80" class="w-full h-full object-cover rounded-full" alt="Shirt">
+        </div>
+        <span class="text-[11px] text-gray-700 font-medium group-hover:text-mercular-blue">เสื้อเชิ้ต</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 min-w-[70px] cursor-pointer group" onclick="filterCategory('กางเกง')">
+        <div class="w-[60px] h-[60px] rounded-full border border-gray-200 bg-white p-1 group-hover:border-mercular-blue transition overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1542272604-780c96856592?w=100&q=80" class="w-full h-full object-cover rounded-full" alt="Pants">
+        </div>
+        <span class="text-[11px] text-gray-700 font-medium group-hover:text-mercular-blue">กางเกง</span>
+      </div>
+      <div class="flex flex-col items-center gap-2 min-w-[70px] cursor-pointer group" onclick="filterCategory('เสื้อกันหนาว/ฮู้ด')">
+        <div class="w-[60px] h-[60px] rounded-full border border-gray-200 bg-white p-1 group-hover:border-mercular-blue transition overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=100&q=80" class="w-full h-full object-cover rounded-full" alt="Hoodie">
+        </div>
+        <span class="text-[11px] text-gray-700 font-medium group-hover:text-mercular-blue">ฮู้ด/แจ็คเก็ต</span>
+      </div>
+    </section>
+
+    <!-- 5. Wide Promo Banner -->
+    <section class="mb-10">
+      <div class="w-full h-24 sm:h-32 rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 overflow-hidden relative flex items-center justify-between px-8">
+        <div class="text-white relative z-10">
+          <h2 class="text-xl sm:text-3xl font-bold italic mb-1 text-yellow-300">🔥 FLASH SALE แจกโค้ดลดเดือด!</h2>
+          <p class="text-sm font-medium">เก็บโค้ดส่งฟรี และส่วนลดสูงสุด 50% ด่วน!</p>
+        </div>
+        <div class="hidden sm:flex relative z-10 gap-2">
+          <div class="bg-white text-blue-600 px-4 py-2 rounded-xl font-bold">SALE50</div>
+          <div class="bg-yellow-400 text-slate-900 px-4 py-2 rounded-xl font-bold flex items-center gap-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path><path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.5a2.5 2.5 0 014.9 0H14a2.5 2.5 0 014.9 0H20a1 1 0 001-1V9l-2-4h-4V4a1 1 0 00-1-1H3zm11 1h2l1.5 3H14V5zM3 6h9v8H3V6z"></path></svg>
+            ส่งฟรี
+          </div>
+        </div>
+        <!-- Decorative bg -->
+        <div class="absolute -right-10 top-0 bottom-0 opacity-20 transform rotate-12">
+           <svg class="w-64 h-64 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A12.014 12.014 0 0010 1c-6.627 0-12 5.373-12 12 0 1.637.33 3.197.925 4.618l3.125-3.124a9.96 9.96 0 01-1.047-3.494h2.013c.099 1.155.438 2.247.962 3.226l1.455-1.455a7.973 7.973 0 01-.692-2.316l2.122.285c.18 1.341.674 2.585 1.411 3.655l1.439-1.44a5.975 5.975 0 01-1.12-3.136l2.235.3c.123 1.045.545 2.01 1.18 2.802l1.431-1.431a4.015 4.015 0 01-.767-1.74l2.176.292a1.996 1.996 0 01.385-.623l1.428 1.428a11.967 11.967 0 001.353-2.091l-1.92-1.11a9.98 9.98 0 01-1.352 1.666l-1.423-1.423c.518-.39 1-.828 1.442-1.309l1.428 1.428c.414-.492.793-1.018 1.132-1.574l1.92 1.11A11.962 11.962 0 0020 13c0-6.627-5.373-12-12-12zm-4.148 4.6A9.972 9.972 0 0110 3c1.642 0 3.19.395 4.542 1.087l-1.11 1.92A7.978 7.978 0 0010 5a7.972 7.972 0 00-3.328.73l-1.11-1.92a9.977 9.977 0 011.59-1.165z" clip-rule="evenodd"></path></svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Products Section -->
+    <section>
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-slate-800 flex items-center justify-center gap-2">
+          <span class="text-xl">🏆</span> Best of ที่สุดของเสื้อผ้า <span class="text-xl">🏆</span>
+        </h2>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex justify-center flex-wrap gap-2 mb-8" id="categoryFilterContainer">
+        <button class="category-pill active bg-mercular-blue text-white px-5 py-1.5 rounded-full text-sm font-medium transition" data-category="ทั้งหมด">ทั้งหมด</button>
+        <button class="category-pill bg-white border border-gray-200 text-gray-600 hover:text-mercular-blue hover:border-mercular-blue px-5 py-1.5 rounded-full text-sm font-medium transition" data-category="เสื้อยืด">เสื้อยืด</button>
+        <button class="category-pill bg-white border border-gray-200 text-gray-600 hover:text-mercular-blue hover:border-mercular-blue px-5 py-1.5 rounded-full text-sm font-medium transition" data-category="เสื้อเชิ้ต">เสื้อเชิ้ต</button>
+        <button class="category-pill bg-white border border-gray-200 text-gray-600 hover:text-mercular-blue hover:border-mercular-blue px-5 py-1.5 rounded-full text-sm font-medium transition" data-category="กางเกง">กางเกง</button>
+        <button class="category-pill bg-white border border-gray-200 text-gray-600 hover:text-mercular-blue hover:border-mercular-blue px-5 py-1.5 rounded-full text-sm font-medium transition" data-category="เสื้อกันหนาว/ฮู้ด">เสื้อกันหนาว/ฮู้ด</button>
+      </div>
+
+      <!-- Main Layout: Sidebar Promo + Products Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Left Promo Panel -->
+        <div class="hidden lg:flex flex-col bg-blue-600 rounded-2xl p-6 text-white overflow-hidden relative min-h-[400px]">
+          <div class="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900/90 z-0"></div>
+          <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=600&q=80" alt="Promo" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-40">
+          
+          <div class="relative z-10 flex flex-col h-full">
+            <div class="bg-yellow-400 text-slate-900 text-xs font-black italic px-3 py-1 rounded inline-block w-fit mb-3 transform -skew-x-12">BEST OF THIBEST</div>
+            <h3 class="text-3xl font-bold leading-tight mb-2">สุดยอด<br>ตัวเด่น<br>คัดมาให้แล้ว</h3>
+            <p class="text-sm text-blue-100 mt-2">อัปเดตแฟชั่นใหม่ล่าสุด สไตล์ไหนก็เอาอยู่</p>
+            <div class="mt-auto pt-6">
+              <div class="w-12 h-12 bg-white text-blue-600 rounded-full flex items-center justify-center shadow-xl cursor-pointer hover:scale-110 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Grid (3 columns on lg) -->
+        <div class="lg:col-span-3">
+          
+          <!-- Empty State -->
+          <div id="emptyState" class="hidden text-center py-16 px-4 bg-gray-50 border border-dashed border-gray-300 rounded-2xl h-full flex flex-col items-center justify-center">
+            <div class="text-5xl mb-3">📭</div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-1">ไม่พบสินค้าในหมวดหมู่นี้</h3>
+            <button onclick="filterCategory('ทั้งหมด')" class="mt-4 bg-mercular-blue hover:bg-mercular-dark text-white px-6 py-2 rounded-full font-medium shadow-md transition">ดูสินค้าทั้งหมด</button>
+          </div>
+
+          <!-- Grid -->
+          <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- JS Rendered Cards -->
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="hidden fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">👕</span>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 leading-tight">เข้าสู่ระบบสมาชิก</h3>
+            <p class="text-xs text-gray-500">ยินดีต้อนรับสู่ Thibest Clothes</p>
+          </div>
+        </div>
+        <button onclick="closeLoginModal()" class="text-gray-400 hover:text-gray-700 w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5">อีเมล หรือ เบอร์โทรศัพท์</label>
+          <input 
+            type="text" 
+            id="loginUsername" 
+            required 
+            placeholder="example@email.com หรือ 0812345678"
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition"
+          >
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-gray-700">รหัสผ่าน</label>
+            <a href="javascript:void(0)" onclick="showToast('กรุณาติดต่อแอดมินเพื่อรีเซ็ตรหัสผ่าน', 'info')" class="text-xs text-mercular-blue hover:underline">ลืมรหัสผ่าน?</a>
+          </div>
+          <input 
+            type="password" 
+            id="loginPassword" 
+            required 
+            placeholder="กรอกรหัสผ่านของคุณ"
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition"
+          >
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+            <input type="checkbox" checked class="rounded text-mercular-blue focus:ring-mercular-blue">
+            <span>จดจำการเข้าสู่ระบบ</span>
+          </label>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-3 bg-mercular-blue hover:bg-mercular-dark text-white rounded-xl font-medium text-sm transition shadow-lg shadow-mercular-blue/30 cursor-pointer flex items-center justify-center gap-2"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+          เข้าสู่ระบบ
+        </button>
+
+        <!-- Social Login -->
+        <div class="relative flex items-center justify-center my-3">
+          <div class="border-t border-gray-200 w-full"></div>
+          <span class="bg-white px-3 text-[11px] text-gray-400 uppercase tracking-wider absolute">หรือเชื่อมต่อด้วย</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-1">
+          <button type="button" onclick="quickSocialLogin('Google')" class="flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
+            <svg class="w-4 h-4" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 20.4 7.5 23 12 23z"/></svg>
+            Google
+          </button>
+          <button type="button" onclick="quickSocialLogin('LINE')" class="flex items-center justify-center gap-2 py-2 border border-green-200 bg-green-50 text-green-700 rounded-xl text-xs font-medium hover:bg-green-100 transition">
+            <span class="font-bold text-sm">LINE</span>
+            Line ID
+          </button>
+        </div>
+
+        <div class="text-center pt-2">
+          <p class="text-xs text-gray-500">
+            ยังไม่มีบัญชีผู้ใช้? 
+            <a href="javascript:void(0)" onclick="showToast('ระบบสมัครสมาชิกกำลังเตรียมเปิดให้บริการ', 'info')" class="text-mercular-blue font-semibold hover:underline">สมัครสมาชิกฟรี</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastContainer" class="fixed bottom-6 right-6 z-[200] flex flex-col gap-2 pointer-events-none"></div>
+
+  <script>
+    const API_BASE = '/api/products';
+    let currentCategory = 'ทั้งหมด';
+    let searchQuery = '';
+    let searchDebounce = null;
+    let allProductsData = [];
+    let cartCount = 0;
+    let currentUser = null;
+
+    const elements = {
+      grid: document.getElementById('productsGrid'),
+      empty: document.getElementById('emptyState'),
+      cartBadge: document.getElementById('statTotalItems'),
+      searchInput: document.getElementById('searchInput'),
+      catFilters: document.getElementById('categoryFilterContainer'),
+      loginModal: document.getElementById('loginModal'),
+      loginBtn: document.getElementById('btnLogin'),
+      bestSeller: document.getElementById('bestSellerList')
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchProducts();
+      setupEvents();
+    });
+
+    function setupEvents() {
+      elements.searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.trim();
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(fetchProducts, 300);
+      });
+
+      elements.catFilters.addEventListener('click', (e) => {
+        const btn = e.target.closest('.category-pill');
+        if (!btn) return;
+        filterCategory(btn.dataset.category);
+      });
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.category-pill').forEach(el => {
+        el.className = 'category-pill bg-white border border-gray-200 text-gray-600 hover:text-mercular-blue hover:border-mercular-blue px-5 py-1.5 rounded-full text-sm font-medium transition cursor-pointer';
+      });
+      const activeBtn = document.querySelector(`.category-pill[data-category="${cat}"]`) || document.querySelector(`.category-pill[data-category="ทั้งหมด"]`);
+      if (activeBtn) {
+        activeBtn.className = 'category-pill active bg-mercular-blue text-white px-5 py-1.5 rounded-full text-sm font-medium shadow-md shadow-mercular-blue/20 transition cursor-pointer';
+      }
+      currentCategory = cat;
+      fetchProducts();
+    }
+
+    async function fetchProducts() {
+      try {
+        const params = new URLSearchParams();
+        if (currentCategory && currentCategory !== 'ทั้งหมด') params.append('category', currentCategory);
+        if (searchQuery) params.append('search', searchQuery);
+
+        const res = await fetch(`${API_BASE}?${params.toString()}`);
+        const result = await res.json();
+
+        if (result.success) {
+          allProductsData = result.data;
+          renderProducts(allProductsData);
+          if (currentCategory === 'ทั้งหมด' && !searchQuery) {
+            renderBestSeller(allProductsData);
+          }
+        } else {
+          elements.grid.innerHTML = '';
+          elements.empty.innerHTML = `
+            <div class="text-5xl mb-3">⚙️</div>
+            <h3 class="text-base font-bold text-slate-800 mb-1">ยังไม่ได้เชื่อมต่อฐานข้อมูล MySQL</h3>
+            <p class="text-xs text-gray-500 max-w-sm mb-4">กรุณานำไฟล์ <span class="font-mono bg-gray-200 px-1.5 py-0.5 rounded text-blue-600">thibest_db.sql</span> ไป Import ใน phpMyAdmin และเช็ครหัสผ่านในไฟล์ <span class="font-mono bg-gray-200 px-1.5 py-0.5 rounded">.env</span></p>
+            <button onclick="fetchProducts()" class="bg-mercular-blue text-white px-5 py-2 rounded-full text-xs font-semibold shadow hover:bg-mercular-dark transition">ลองใหม่อีกครั้ง</button>
+          `;
+          elements.empty.classList.remove('hidden');
+        }
+      } catch (err) {
+        showToast('การเชื่อมต่อกับเซิร์ฟเวอร์ขัดข้อง', 'error');
+      }
+    }
+
+    function renderProducts(products) {
+      if (products.length === 0) {
+        elements.grid.innerHTML = '';
+        elements.empty.classList.remove('hidden');
+        return;
+      }
+
+      elements.empty.classList.add('hidden');
+      const fallbackImg = 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80';
+
+      elements.grid.innerHTML = products.map((p, idx) => {
+        const outOfStock = Number(p.stock) <= 0;
+        
+        // Ranking Ribbon (1,2,3) for top 3 in the grid to match mercular style
+        let ribbon = '';
+        if (idx < 3 && currentCategory === 'ทั้งหมด' && !searchQuery) {
+          const colors = ['bg-amber-400', 'bg-gray-300', 'bg-orange-400'];
+          ribbon = `<div class="absolute -top-2 -left-2 ${colors[idx]} text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md z-10 border-2 border-white">${idx+1}</div>`;
+        }
+
+        return `
+          <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-transparent transition duration-300 group flex flex-col relative">
+            ${ribbon}
+            
+            <div class="relative aspect-square p-4 flex items-center justify-center overflow-hidden bg-gray-50">
+              <img src="${p.image_url || fallbackImg}" alt="${escapeHtml(p.name)}" class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" onerror="this.src='${fallbackImg}'">
+              ${outOfStock ? '<div class="absolute inset-0 bg-white/70 backdrop-blur-[1px] flex items-center justify-center"><span class="bg-gray-900 text-white text-xs font-bold px-3 py-1 rounded-full shadow">สินค้าหมด</span></div>' : ''}
+              
+              <!-- Wishlist heart button -->
+              <button onclick="toggleWishlist(event, this)" class="absolute top-2 right-2 w-8 h-8 bg-white/90 hover:bg-white text-gray-400 hover:text-rose-500 rounded-full shadow-sm flex items-center justify-center transition cursor-pointer" title="บันทึกในสิ่งที่ชอบ">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+              </button>
+            </div>
+
+            <div class="p-4 flex flex-col flex-1 border-t border-gray-100">
+              <div class="text-[10px] text-gray-500 font-medium mb-1">${escapeHtml(p.category)} • Size ${escapeHtml(p.size)}</div>
+              <h3 class="text-sm font-semibold text-slate-800 line-clamp-2 mb-2 leading-tight group-hover:text-mercular-blue transition-colors">
+                ${escapeHtml(p.name)}
+              </h3>
+              
+              <div class="mt-auto">
+                <div class="text-lg font-bold text-rose-500 mb-2">฿${Number(p.price).toLocaleString()}</div>
+                <button 
+                  onclick="addToCart('${escapeHtml(p.name)}', ${outOfStock})"
+                  class="w-full py-2 bg-mercular-light text-mercular-blue text-sm font-medium rounded-lg group-hover:bg-mercular-blue group-hover:text-white transition-colors flex items-center justify-center gap-2 cursor-pointer ${outOfStock?'opacity-50 cursor-not-allowed':''}" 
+                  ${outOfStock?'disabled':''}
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                  ${outOfStock ? 'สินค้าหมด' : 'ใส่ตะกร้า'}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBestSeller(products) {
+      const top3 = products.slice(0, 3);
+      if (top3.length === 0) {
+        elements.bestSeller.innerHTML = '<div class="text-white text-sm">ยังไม่มีสินค้าเด่น</div>';
+        return;
+      }
+      
+      elements.bestSeller.innerHTML = top3.map((p, i) => `
+        <div onclick="addToCart('${escapeHtml(p.name)}', false)" class="bg-white rounded-xl p-2.5 flex items-center gap-3 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition relative">
+          <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-mercular-dark border-2 border-white text-white text-[10px] font-bold flex items-center justify-center shadow-sm">
+            ${i+1}
+          </div>
+          <div class="w-14 h-14 bg-gray-50 rounded-lg overflow-hidden ml-2 flex-shrink-0">
+             <img src="${p.image_url || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=100&q=80'}" class="w-full h-full object-contain mix-blend-multiply" onerror="this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=100&q=80'">
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-semibold text-gray-800 line-clamp-1">${escapeHtml(p.name)}</h4>
+            <div class="text-rose-500 font-bold text-[13px] mt-0.5">฿${Number(p.price).toLocaleString()}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Cart and Wishlist interactions
+    function addToCart(productName, outOfStock) {
+      if (outOfStock) {
+        showToast(`สินค้า "${productName}" หมดชั่วคราว`, 'error');
+        return;
+      }
+      cartCount++;
+      elements.cartBadge.textContent = cartCount;
+      elements.cartBadge.classList.add('scale-125');
+      setTimeout(() => elements.cartBadge.classList.remove('scale-125'), 200);
+      showToast(`เพิ่ม "${productName}" ลงตะกร้าแล้ว (รวม ${cartCount} ชิ้น)`, 'success');
+    }
+
+    function toggleWishlist(e, btn) {
+      e.stopPropagation();
+      const svg = btn.querySelector('svg');
+      const isFav = svg.getAttribute('fill') === 'currentColor';
+      if (isFav) {
+        svg.setAttribute('fill', 'none');
+        btn.classList.remove('text-rose-500');
+        btn.classList.add('text-gray-400');
+        showToast('นำออกจากสิ่งที่ชอบแล้ว', 'info');
+      } else {
+        svg.setAttribute('fill', 'currentColor');
+        btn.classList.remove('text-gray-400');
+        btn.classList.add('text-rose-500');
+        showToast('เพิ่มในสิ่งที่ชอบเรียบร้อย', 'success');
+      }
+    }
+
+    // Login Modal Handlers
+    function openLoginModal() {
+      elements.loginModal.classList.remove('hidden');
+      document.getElementById('loginUsername').focus();
+    }
+
+    function closeLoginModal() {
+      elements.loginModal.classList.add('hidden');
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const user = document.getElementById('loginUsername').value.trim();
+      currentUser = user.split('@')[0];
+      
+      // Update header button to show logged in state
+      elements.loginBtn.innerHTML = `
+        <span class="w-6 h-6 rounded-full bg-white text-mercular-blue font-bold text-xs flex items-center justify-center">👤</span>
+        <span>สวัสดี, ${escapeHtml(currentUser)}</span>
+      `;
+      elements.loginBtn.onclick = () => showToast(`คุณเข้าสู่ระบบในชื่อ ${escapeHtml(currentUser)} แล้ว`, 'info');
+      
+      closeLoginModal();
+      showToast(`เข้าสู่ระบบสำเร็จ ยินดีต้อนรับคุณ ${currentUser}!`, 'success');
+    }
+
+    function quickSocialLogin(provider) {
+      currentUser = `${provider}_User`;
+      elements.loginBtn.innerHTML = `
+        <span class="w-6 h-6 rounded-full bg-white text-mercular-blue font-bold text-xs flex items-center justify-center">👤</span>
+        <span>${escapeHtml(currentUser)}</span>
+      `;
+      elements.loginBtn.onclick = () => showToast(`เข้าสู่ระบบผ่าน ${provider} แล้ว`, 'info');
+      closeLoginModal();
+      showToast(`เข้าสู่ระบบด้วย ${provider} สำเร็จ!`, 'success');
+    }
+
+    // Toast Notification System
+    function showToast(msg, type='success') {
+      const c = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      
+      let icon = '✅';
+      let borderCol = 'border-green-200 text-green-800 bg-white';
+      if (type === 'error') {
+        icon = '⚠️';
+        borderCol = 'border-rose-200 text-rose-800 bg-white';
+      } else if (type === 'info') {
+        icon = 'ℹ️';
+        borderCol = 'border-blue-200 text-blue-800 bg-white';
+      }
+
+      t.className = `flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-xl text-xs sm:text-sm font-medium border ${borderCol} pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0`;
+      t.innerHTML = `<span>${icon}</span><span>${escapeHtml(msg)}</span>`;
+      c.appendChild(t);
+
+      requestAnimationFrame(() => {
+        t.classList.remove('translate-y-2', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        t.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => t.remove(), 300);
+      }, 3000);
+    }
+
+    const escapeHtml = (s) => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  </script>
+</body>
+</html>
