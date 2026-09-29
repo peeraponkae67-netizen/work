@@ -1,4 +1,4 @@
-# 👕 Thibest Clothing Store (ร้านขายเสื้อผ้าออนไลน์สไตล์ Mercular)
+# 👕 Thibest Clothing Store (ร้านขายเสื้อผ้า)
 
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-v5.x-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
