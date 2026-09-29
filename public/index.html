@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thibest Clothes | สไตล์ Mercular</title>
+  <title>Thibest - Studio</title>
 
   <!-- Google Fonts: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -73,18 +73,11 @@
   <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-[1200px] mx-auto px-4 h-[72px] flex items-center justify-between gap-4">
 
-      <!-- Logo & Categories Button -->
+      <!-- Logo -->
       <div class="flex items-center gap-6">
         <a href="#" class="text-2xl font-bold text-slate-900 tracking-tighter flex items-center gap-1">
           <span class="text-mercular-blue text-3xl">👕</span> thibest.
         </a>
-        <button
-          class="hidden md:flex items-center gap-2 bg-mercular-light text-mercular-blue px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-100 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-          สินค้าทั้งหมด
-        </button>
       </div>
 
       <!-- Search Bar -->
@@ -103,7 +96,9 @@
       <!-- Right Actions (Cart, Login, Add Product) -->
       <div class="flex items-center gap-4">
         <div class="flex items-center gap-3 border-r border-gray-200 pr-4">
-          <button class="text-gray-600 hover:text-mercular-blue transition relative">
+          <button onclick="openCartDrawer()"
+            class="text-gray-600 hover:text-mercular-blue transition relative p-2 rounded-full hover:bg-slate-100 cursor-pointer"
+            title="ดูสินค้าในตะกร้า">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
@@ -114,36 +109,112 @@
           </button>
         </div>
 
-        <button id="btnLogin" onclick="openLoginModal()"
-          class="hidden md:flex items-center gap-2 bg-mercular-blue hover:bg-mercular-dark text-white text-sm font-medium px-5 py-2.5 rounded-full transition shadow-lg shadow-mercular-blue/30 cursor-pointer">
+        <!-- Add Product Button (เฉพาะ Admin เท่านั้น) -->
+        <button id="btnAddProduct" onclick="openProductModal()"
+          class="hidden items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-full transition shadow-md shadow-emerald-600/30 cursor-pointer"
+          title="เพิ่มสินค้า">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
           </svg>
-          เข้าสู่ระบบ
+          <span class="hidden sm:inline">เพิ่มสินค้า</span>
         </button>
+
+        <!-- User Auth Container -->
+        <div id="userAuthContainer" class="flex items-center gap-2">
+          <!-- Not Logged In State (Guest) -->
+          <div id="guestAuthGroup" class="flex items-center gap-2">
+            <button id="btnRegister" onclick="openLoginModal('register')"
+              class="hidden sm:inline-flex items-center gap-1.5 border border-mercular-blue text-mercular-blue hover:bg-mercular-light text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2 sm:py-2.5 rounded-full transition cursor-pointer">
+              <span>สมัครสมาชิก</span>
+            </button>
+            <button id="btnLogin" onclick="openLoginModal('login')"
+              class="flex items-center gap-2 bg-mercular-blue hover:bg-mercular-dark text-white text-xs sm:text-sm font-semibold px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full transition shadow-lg shadow-mercular-blue/30 cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              <span>เข้าสู่ระบบ</span>
+            </button>
+          </div>
+
+          <!-- Logged In State (User Profile & Dropdown) -->
+          <div id="userProfileMenu" class="hidden relative">
+            <button id="userMenuBtn" onclick="toggleUserDropdown(event)"
+              class="flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-800 text-sm font-medium px-3 py-1.5 rounded-full transition cursor-pointer shadow-sm">
+              <span
+                class="w-7 h-7 rounded-full bg-gradient-to-tr from-mercular-blue to-blue-400 text-white font-bold text-xs flex items-center justify-center shadow-sm"
+                id="userAvatarText">👤</span>
+              <span id="userNameDisplay"
+                class="max-w-[100px] sm:max-w-[140px] truncate font-semibold text-xs sm:text-sm">User</span>
+              <svg id="userMenuChevron" class="w-4 h-4 text-gray-500 transition-transform duration-200" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div id="userDropdown"
+              class="hidden absolute right-0 mt-2 w-60 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-[150] animate-in fade-in duration-150">
+              <div class="px-4 py-3 border-b border-gray-100 bg-slate-50/80 rounded-t-2xl">
+                <p class="text-[11px] font-medium text-gray-500">เข้าสู่ระบบในชื่อ</p>
+                <p id="dropdownUserEmail" class="text-sm font-bold text-slate-800 truncate">user</p>
+                <div id="userRoleBadge"
+                  class="inline-flex items-center gap-1 mt-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>กำลังออนไลน์</span>
+                </div>
+              </div>
+
+              <div class="py-1.5 text-xs">
+                <button type="button" onclick="showToast('กำลังนำไปที่คำสั่งซื้อของคุณ', 'info'); toggleUserDropdown();"
+                  class="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-mercular-blue transition text-left cursor-pointer">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                  </svg>
+                  <span>คำสั่งซื้อของฉัน</span>
+                </button>
+                <button type="button" onclick="showToast('กำลังนำไปที่สินค้าที่ถูกใจ', 'info'); toggleUserDropdown();"
+                  class="w-full flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-rose-50 hover:text-rose-500 transition text-left cursor-pointer">
+                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                    </path>
+                  </svg>
+                  <span>สินค้าที่ถูกใจ</span>
+                </button>
+              </div>
+
+              <div class="border-t border-gray-100 pt-1">
+                <button type="button" onclick="handleLogout()"
+                  class="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 transition cursor-pointer text-left group">
+                  <svg class="w-4 h-4 text-rose-500 group-hover:translate-x-0.5 transition-transform" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                    </path>
+                  </svg>
+                  <span>ออกจากระบบ (Logout)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick 1-Click Logout Button Beside User Profile -->
+          <button id="btnQuickLogout" onclick="handleLogout()" title="ออกจากระบบ (Logout)"
+            class="hidden text-gray-400 hover:text-rose-600 hover:bg-rose-50 p-2 rounded-full transition cursor-pointer"
+            aria-label="ออกจากระบบ">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+            </svg>
+          </button>
+        </div>
       </div>
 
     </div>
   </header>
 
-  <!-- 2. Navigation Categories -->
-  <nav class="border-b border-gray-100 bg-white">
-    <div class="max-w-[1200px] mx-auto px-4 flex items-center overflow-x-auto hide-scrollbar gap-2 py-2">
-      <button
-        class="px-4 py-1.5 bg-gray-100 text-gray-700 text-[13px] font-medium rounded-md whitespace-nowrap hover:bg-gray-200 transition">บทความ</button>
-      <button
-        class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">เสื้อยืด</button>
-      <button
-        class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">เสื้อเชิ้ต</button>
-      <button
-        class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">กางเกง</button>
-      <button
-        class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">เสื้อกันหนาว/ฮู้ด</button>
-      <button
-        class="px-4 py-1.5 bg-gray-50 text-gray-600 text-[13px] rounded-md whitespace-nowrap hover:bg-gray-100 transition border border-gray-100">อุปกรณ์เสริม</button>
-    </div>
-  </nav>
 
   <main class="max-w-[1200px] mx-auto px-4 pt-6">
 
@@ -219,11 +290,9 @@
         onclick="filterCategory('กางเกง')">
         <div
           class="w-[60px] h-[60px] rounded-full border border-gray-200 bg-white p-1 group-hover:border-mercular-blue transition overflow-hidden">
-          <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=100&q=80"
+          <img src="https://images.unsplash.com/photo-1542272604-780c96856592?w=100&q=80"
             class="w-full h-full object-cover rounded-full" alt="Pants">
         </div>
-
-
         <span class="text-[11px] text-gray-700 font-medium group-hover:text-mercular-blue">กางเกง</span>
       </div>
       <div class="flex flex-col items-center gap-2 min-w-[70px] cursor-pointer group"
@@ -345,96 +414,355 @@
     </section>
   </main>
 
-  <!-- Login Modal -->
+  <!-- Auth Modal (เข้าสู่ระบบ / สมัครสมาชิก ด้วยอีเมล สไตล์ Mercular) -->
   <div id="loginModal"
     class="hidden fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div
-      class="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      class="bg-white rounded-3xl w-full max-w-md shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
 
-      <!-- Modal Header -->
-      <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <span class="text-2xl">👕</span>
-          <div>
-            <h3 class="text-lg font-bold text-slate-900 leading-tight">เข้าสู่ระบบสมาชิก</h3>
-            <p class="text-xs text-gray-500">ยินดีต้อนรับสู่ Thibest Clothes</p>
-          </div>
-        </div>
-        <button onclick="closeLoginModal()"
-          class="text-gray-400 hover:text-gray-700 w-8 h-8 rounded-full hover:bg-gray-100 flex items-center justify-center transition">&times;</button>
+      <!-- Modal Header with Back button and Title -->
+      <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <button type="button" onclick="handleAuthBack()" id="authBackBtn"
+          class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-slate-900 rounded-full hover:bg-gray-100 transition cursor-pointer"
+          title="ย้อนกลับ">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+        <h3 id="authModalTitle" class="text-base font-bold text-slate-800">สมัครสมาชิกด้วยอีเมล</h3>
+        <button type="button" onclick="closeLoginModal()"
+          class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-slate-800 rounded-full hover:bg-gray-100 transition cursor-pointer text-xl font-bold">&times;</button>
       </div>
 
-      <!-- Modal Body -->
-      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="p-6 space-y-4">
+      <!-- Tabs Navigation (เข้าสู่ระบบ / สมัครสมาชิก) -->
+      <div class="flex border-b border-gray-100 text-sm font-medium">
+        <button type="button" id="tabLoginBtn" onclick="switchAuthTab('login')"
+          class="flex-1 py-3 text-center transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-800 cursor-pointer">
+          เข้าสู่ระบบ
+        </button>
+        <button type="button" id="tabRegisterBtn" onclick="switchAuthTab('register')"
+          class="flex-1 py-3 text-center transition-colors border-b-2 border-blue-600 text-blue-600 font-bold cursor-pointer">
+          สมัครสมาชิก
+        </button>
+      </div>
+
+      <!-- Register Form (สมัครสมาชิก) -->
+      <form id="registerForm" onsubmit="handleRegisterSubmit(event)" class="p-6 space-y-4">
         <div>
-          <label class="block text-xs font-semibold text-gray-700 mb-1.5">อีเมล หรือ เบอร์โทรศัพท์</label>
-          <input type="text" id="loginUsername" required placeholder="example@email.com หรือ 0812345678"
-            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+          <input type="email" id="regEmail" required placeholder="อีเมล"
+            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition placeholder:text-gray-400">
         </div>
 
         <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label class="block text-xs font-semibold text-gray-700">รหัสผ่าน</label>
-            <a href="javascript:void(0)" onclick="showToast('กรุณาติดต่อแอดมินเพื่อรีเซ็ตรหัสผ่าน', 'info')"
-              class="text-xs text-mercular-blue hover:underline">ลืมรหัสผ่าน?</a>
-          </div>
-          <input type="password" id="loginPassword" required placeholder="กรอกรหัสผ่านของคุณ"
-            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+          <input type="tel" id="regPhone" required pattern="[0-9]{9,10}" maxlength="10" placeholder="เบอร์โทรศัพท์"
+            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition placeholder:text-gray-400">
         </div>
 
-        <div class="flex items-center justify-between pt-1">
-          <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
-            <input type="checkbox" checked class="rounded text-mercular-blue focus:ring-mercular-blue">
-            <span>จดจำการเข้าสู่ระบบ</span>
+        <div class="relative">
+          <input type="password" id="regPassword" required minlength="4" placeholder="รหัสผ่าน"
+            class="w-full px-4 py-3 pr-11 bg-white border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition placeholder:text-gray-400">
+          <button type="button" onclick="togglePasswordVisibility('regPassword', this)"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="relative">
+          <input type="password" id="regConfirmPassword" required minlength="4" placeholder="ยืนยันรหัสผ่าน"
+            class="w-full px-4 py-3 pr-11 bg-white border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition placeholder:text-gray-400">
+          <button type="button" onclick="togglePasswordVisibility('regConfirmPassword', this)"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="space-y-2 pt-1 text-xs text-gray-600">
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input type="checkbox" id="regNewsletterCheck"
+              class="mt-0.5 rounded text-blue-600 focus:ring-blue-600 border-gray-300">
+            <span class="leading-relaxed">ต้องการรับข่าวสารและโปรโมชั่นจาก Thibest</span>
+          </label>
+          <label class="flex items-start gap-2.5 cursor-pointer">
+            <input type="checkbox" id="regTermsCheck" required
+              class="mt-0.5 rounded text-blue-600 focus:ring-blue-600 border-gray-300">
+            <span class="leading-relaxed">ยอมรับ <a href="javascript:void(0)" class="text-blue-600 underline">ข้อตกลงและเงื่อนไข</a> และ <a href="javascript:void(0)" class="text-blue-600 underline">นโยบายความเป็นส่วนตัว</a></span>
           </label>
         </div>
 
         <button type="submit"
-          class="w-full py-3 bg-mercular-blue hover:bg-mercular-dark text-white rounded-xl font-medium text-sm transition shadow-lg shadow-mercular-blue/30 cursor-pointer flex items-center justify-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
-          </svg>
+          class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-blue-500/25 cursor-pointer">
+          สมัครสมาชิก
+        </button>
+      </form>
+
+      <!-- Login Form (เข้าสู่ระบบ) -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="hidden p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1.5">อีเมล หรือ ชื่อผู้ใช้ <span
+              class="text-rose-500">*</span></label>
+          <input type="text" id="loginUsername" required minlength="3" maxlength="100"
+            placeholder="example@email.com หรือ admin"
+            class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition placeholder:text-gray-400">
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-semibold text-gray-700">รหัสผ่าน <span
+                class="text-rose-500">*</span></label>
+            <a href="javascript:void(0)" onclick="showToast('กรุณาติดต่อแอดมินเพื่อรีเซ็ตรหัสผ่าน', 'info')"
+              class="text-xs text-blue-600 hover:underline">ลืมรหัสผ่าน?</a>
+          </div>
+          <div class="relative">
+            <input type="password" id="loginPassword" required minlength="4" placeholder="กรอกรหัสผ่านของคุณ"
+              class="w-full px-4 py-3 pr-11 bg-white border border-gray-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 transition placeholder:text-gray-400">
+            <button type="button" onclick="togglePasswordVisibility('loginPassword', this)"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1 cursor-pointer">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer">
+            <input type="checkbox" id="rememberMeCheck" checked
+              class="rounded text-blue-600 focus:ring-blue-600 border-gray-300">
+            <span>จดจำการเข้าสู่ระบบ</span>
+          </label>
+        </div>
+
+        <div
+          class="bg-blue-50/70 border border-blue-100 rounded-xl p-2.5 text-[11px] text-blue-700 flex items-start gap-2">
+          <span>💡</span>
+          <div>
+            <span class="font-bold">ข้อมูลเข้าสู่ระบบสำหรับทดสอบ:</span><br>
+            👑 <span class="font-mono font-bold text-amber-800">admin</span> (รหัส: <span
+              class="font-mono font-semibold">admin1234</span>) &rarr; <span
+              class="text-emerald-700 font-semibold">มีสิทธิ์เพิ่ม ลบ และแก้ไขสินค้า</span><br>
+            👤 <span class="font-mono font-bold">userdemo</span> (รหัส: <span
+              class="font-mono font-semibold">user1234</span>) &rarr; สิทธิ์ลูกค้าทั่วไป
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm transition shadow-lg shadow-blue-500/25 cursor-pointer flex items-center justify-center gap-2">
           เข้าสู่ระบบ
         </button>
+      </form>
+    </div>
+  </div>
 
-        <!-- Social Login -->
-        <div class="relative flex items-center justify-center my-3">
-          <div class="border-t border-gray-200 w-full"></div>
-          <span
-            class="bg-white px-3 text-[11px] text-gray-400 uppercase tracking-wider absolute">หรือเชื่อมต่อด้วย</span>
+  <!-- Delete Product Confirmation Modal (แก้ไขบัค ลบสินค้าไม่ได้) -->
+  <div id="deleteModal"
+    class="hidden fixed inset-0 z-[120] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 p-6 text-center">
+      <div class="w-14 h-14 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
+        🗑️
+      </div>
+      <h3 class="text-base font-bold text-slate-800 mb-1">ยืนยันการลบสินค้า</h3>
+      <p class="text-xs text-gray-500 mb-4">
+        คุณแน่ใจหรือไม่ว่าต้องการลบสินค้า <span id="delProdName" class="font-bold text-slate-700"></span> (ID: <span id="delProdId" class="font-mono font-semibold"></span>) ออกจากฐานข้อมูล?
+      </p>
+      <div class="bg-gray-50 rounded-xl p-3 mb-5 border border-gray-200 flex items-center gap-3 text-left">
+        <img id="delProdImg" src="" class="w-12 h-12 object-contain rounded-lg bg-white border border-gray-100 flex-shrink-0" onerror="this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=100&q=80'">
+        <div class="min-w-0 flex-1">
+          <div id="delProdTitle" class="text-xs font-semibold text-slate-800 truncate"></div>
+          <div id="delProdPrice" class="text-xs font-bold text-rose-500 mt-0.5"></div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-2.5">
+        <button type="button" onclick="closeDeleteModal()"
+          class="py-2.5 px-4 border border-gray-200 text-gray-700 font-semibold text-xs rounded-xl hover:bg-gray-100 transition cursor-pointer">
+          ยกเลิก
+        </button>
+        <button type="button" id="confirmDeleteBtn" onclick="executeDeleteProduct()"
+          class="py-2.5 px-4 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded-xl transition shadow-md shadow-rose-600/30 cursor-pointer flex items-center justify-center gap-1.5">
+          <span>ลบสินค้า</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product CRUD Modal (Create & Update พร้อม HTML5 Input Validation) -->
+  <div id="productModal"
+    class="hidden fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+      class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl" id="prodModalIcon">📦</span>
+          <div>
+            <h3 class="text-lg font-bold text-slate-900 leading-tight" id="prodModalTitle">เพิ่มสินค้าใหม่
+            </h3>
+            <p class="text-xs text-gray-500">กรอกข้อมูลสินค้าเพื่อบันทึกลงในระบบ MySQL</p>
+          </div>
+        </div>
+        <button onclick="closeProductModal()"
+          class="text-gray-400 hover:text-gray-700 w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center transition cursor-pointer">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="productForm" onsubmit="handleProductSubmit(event)" class="p-6 space-y-4 overflow-y-auto">
+        <input type="hidden" id="prodId" value="">
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">ชื่อสินค้า <span
+              class="text-rose-500">*</span></label>
+          <input type="text" id="prodName" required minlength="2" maxlength="255"
+            placeholder="เช่น เสื้อยืด Oversize สไตล์ Minimal"
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+          <p class="text-[10px] text-amber-600 mt-1">🔒 ต้องล็อกอินด้วย admin จึงจะบันทึกข้อมูลได้</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 pt-1">
-          <button type="button" onclick="quickSocialLogin('Google')"
-            class="flex items-center justify-center gap-2 py-2 border border-gray-200 rounded-xl text-xs font-medium text-gray-700 hover:bg-gray-50 transition">
-            <svg class="w-4 h-4" viewBox="0 0 24 24">
-              <path fill="#EA4335"
-                d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z" />
-              <path fill="#4285F4"
-                d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.6h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.9z" />
-              <path fill="#FBBC05"
-                d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.8 0 12s.7 3.3 1.9 5.7l3.7-2.9z" />
-              <path fill="#34A853"
-                d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16C3.7 20.4 7.5 23 12 23z" />
-            </svg>
-            Google
-          </button>
-          <button type="button" onclick="quickSocialLogin('LINE')"
-            class="flex items-center justify-center gap-2 py-2 border border-green-200 bg-green-50 text-green-700 rounded-xl text-xs font-medium hover:bg-green-100 transition">
-            <span class="font-bold text-sm">LINE</span>
-            Line ID
-          </button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">หมวดหมู่ <span
+                class="text-rose-500">*</span></label>
+            <select id="prodCategory" required
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+              <option value="เสื้อยืด">เสื้อยืด</option>
+              <option value="เสื้อเชิ้ต">เสื้อเชิ้ต</option>
+              <option value="กางเกง">กางเกง</option>
+              <option value="เสื้อกันหนาว/ฮู้ด">เสื้อกันหนาว/ฮู้ด</option>
+              <option value="อุปกรณ์เสริม">อุปกรณ์เสริม</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">ขนาด (Size) <span
+                class="text-rose-500">*</span></label>
+            <select id="prodSize" required
+              class="w-full px-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+              <option value="S">S</option>
+              <option value="M" selected>M</option>
+              <option value="L">L</option>
+              <option value="XL">XL</option>
+              <option value="2XL">2XL</option>
+              <option value="Free Size">Free Size</option>
+              <option value="30">30</option>
+              <option value="32">32</option>
+              <option value="34">34</option>
+            </select>
+          </div>
         </div>
 
-        <div class="text-center pt-2">
-          <p class="text-xs text-gray-500">
-            ยังไม่มีบัญชีผู้ใช้?
-            <a href="javascript:void(0)" onclick="showToast('ระบบสมัครสมาชิกกำลังเตรียมเปิดให้บริการ', 'info')"
-              class="text-mercular-blue font-semibold hover:underline">สมัครสมาชิกฟรี</a>
-          </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">ราคา (บาท) <span
+                class="text-rose-500">*</span></label>
+            <input type="number" id="prodPrice" required min="1" step="0.01" placeholder="เช่น 390.00"
+              class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+            <p class="text-[10px] text-gray-400 mt-1">ต้องเป็นตัวเลขมากกว่า 0 (HTML5 type="number" min="1")</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-700 mb-1">จำนวนสต็อก <span
+                class="text-rose-500">*</span></label>
+            <input type="number" id="prodStock" required min="0" step="1" placeholder="เช่น 15"
+              class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+            <p class="text-[10px] text-gray-400 mt-1">จำนวนเต็ม 0 ขึ้นไป (HTML5 min="0")</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">ลิงก์รูปภาพ (Image URL)</label>
+          <input type="url" id="prodImage" placeholder="https://images.unsplash.com/..."
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition">
+          <p class="text-[10px] text-gray-400 mt-1">หากเว้นว่าง จะใช้ภาพเริ่มต้น (HTML5 type="url")</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-700 mb-1">รายละเอียดสินค้า</label>
+          <textarea id="prodDesc" rows="3" maxlength="1000" placeholder="คำอธิบายเนื้อผ้า, สไตล์ และคุณสมบัติสินค้า..."
+            class="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:bg-white focus:outline-none focus:border-mercular-blue focus:ring-2 focus:ring-mercular-light transition"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+          <button type="button" onclick="closeProductModal()"
+            class="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-xl text-xs font-semibold hover:bg-gray-100 transition cursor-pointer">
+            ยกเลิก
+          </button>
+          <button type="submit" id="prodSubmitBtn"
+            class="px-6 py-2.5 bg-mercular-blue hover:bg-mercular-dark text-white rounded-xl text-xs font-semibold transition shadow-md shadow-mercular-blue/30 cursor-pointer flex items-center gap-1.5">
+            💾 บันทึกสินค้า
+          </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Shopping Cart Drawer (ระบบตะกร้าสินค้า) -->
+  <div id="cartDrawer" class="hidden fixed inset-0 z-[160] overflow-hidden">
+    <!-- Backdrop -->
+    <div onclick="closeCartDrawer()"
+      class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col transform transition-transform duration-300">
+
+        <!-- Drawer Header -->
+        <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-slate-50">
+          <div class="flex items-center gap-2.5">
+            <span class="text-2xl">🛒</span>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 leading-tight">ตะกร้าสินค้าของคุณ</h3>
+              <p class="text-xs text-gray-500" id="cartCountSubtitle">0 รายการ</p>
+            </div>
+          </div>
+          <button onclick="closeCartDrawer()"
+            class="text-gray-400 hover:text-gray-700 w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center transition cursor-pointer text-lg font-bold">&times;</button>
+        </div>
+
+        <!-- Drawer Body (Items list or Empty state) -->
+        <div class="flex-1 overflow-y-auto p-5" id="cartItemsContainer">
+          <!-- JS will render items or empty state here -->
+        </div>
+
+        <!-- Drawer Footer (Subtotal, Shipping, Total, Checkout button) -->
+        <div id="cartFooter" class="p-5 border-t border-gray-100 bg-slate-50/70 space-y-3">
+          <div class="space-y-1.5 text-xs text-gray-600">
+            <div class="flex items-center justify-between">
+              <span>ราคารวมสินค้า:</span>
+              <span id="cartSubtotal" class="font-semibold text-slate-800">฿0.00</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>ค่าจัดส่ง:</span>
+              <span class="font-semibold text-emerald-600">ฟรี (โปรโมชั่นพิเศษ)</span>
+            </div>
+            <div
+              class="flex items-center justify-between text-base font-bold text-slate-900 pt-2 border-t border-gray-200">
+              <span>ยอดชำระสุทธิ:</span>
+              <span id="cartTotal" class="text-rose-600 text-lg">฿0.00</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button type="button" onclick="clearCart()"
+              class="py-2.5 px-3 border border-gray-300 text-gray-600 rounded-xl text-xs font-semibold hover:bg-gray-100 transition cursor-pointer text-center">
+              ล้างตะกร้า
+            </button>
+            <button type="button" onclick="checkoutCart()"
+              class="py-2.5 px-3 bg-rose-500 hover:bg-rose-600 text-white rounded-xl text-xs font-semibold transition shadow-md shadow-rose-500/30 cursor-pointer text-center flex items-center justify-center gap-1.5">
+              <span>สั่งซื้อสินค้า</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+                </path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
 
@@ -447,8 +775,9 @@
     let searchQuery = '';
     let searchDebounce = null;
     let allProductsData = [];
-    let cartCount = 0;
+    let cartItems = [];
     let currentUser = null;
+    let currentUserRole = null; // 'admin' หรือ 'customer'
 
     const elements = {
       grid: document.getElementById('productsGrid'),
@@ -457,11 +786,21 @@
       searchInput: document.getElementById('searchInput'),
       catFilters: document.getElementById('categoryFilterContainer'),
       loginModal: document.getElementById('loginModal'),
+      guestAuthGroup: document.getElementById('guestAuthGroup'),
       loginBtn: document.getElementById('btnLogin'),
+      btnRegister: document.getElementById('btnRegister'),
+      userProfileMenu: document.getElementById('userProfileMenu'),
+      userDropdown: document.getElementById('userDropdown'),
+      btnQuickLogout: document.getElementById('btnQuickLogout'),
+      btnAddProduct: document.getElementById('btnAddProduct'),
+      productModal: document.getElementById('productModal'),
+      productForm: document.getElementById('productForm'),
       bestSeller: document.getElementById('bestSellerList')
     };
 
     document.addEventListener('DOMContentLoaded', () => {
+      checkUserSession();
+      loadCart();
       fetchProducts();
       setupEvents();
     });
@@ -530,21 +869,13 @@
       }
 
       elements.empty.classList.add('hidden');
-      const fallbackImg = 'https://cdn.shopify.com/s/files/1/1383/4563/files/MEXOD1233-J1205SNBCB_BRYANT_SUNBLEACHBLUE_1.jpg?v=1772506737&width=800';
+      const fallbackImg = 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80';
 
       elements.grid.innerHTML = products.map((p, idx) => {
         const outOfStock = Number(p.stock) <= 0;
 
-        // Ranking Ribbon (1,2,3) for top 3 in the grid to match mercular style
-        let ribbon = '';
-        if (idx < 3 && currentCategory === 'ทั้งหมด' && !searchQuery) {
-          const colors = ['bg-amber-400', 'bg-gray-300', 'bg-orange-400'];
-          ribbon = `<div class="absolute -top-2 -left-2 ${colors[idx]} text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shadow-md z-10 border-2 border-white">${idx + 1}</div>`;
-        }
-
         return `
           <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-xl hover:border-transparent transition duration-300 group flex flex-col relative">
-            ${ribbon}
             
             <div class="relative aspect-square p-4 flex items-center justify-center overflow-hidden bg-gray-50">
               <img src="${p.image_url || fallbackImg}" alt="${escapeHtml(p.name)}" class="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300" onerror="this.src='${fallbackImg}'">
@@ -565,13 +896,35 @@
               <div class="mt-auto">
                 <div class="text-lg font-bold text-rose-500 mb-2">฿${Number(p.price).toLocaleString()}</div>
                 <button 
-                  onclick="addToCart('${escapeHtml(p.name)}', ${outOfStock})"
+                  onclick="addToCart(${p.id}, ${outOfStock})"
                   class="w-full py-2 bg-mercular-light text-mercular-blue text-sm font-medium rounded-lg group-hover:bg-mercular-blue group-hover:text-white transition-colors flex items-center justify-center gap-2 cursor-pointer ${outOfStock ? 'opacity-50 cursor-not-allowed' : ''}" 
                   ${outOfStock ? 'disabled' : ''}
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                   ${outOfStock ? 'สินค้าหมด' : 'ใส่ตะกร้า'}
                 </button>
+
+                <!-- CRUD Actions: Edit & Delete buttons (แสดงเฉพาะเมื่อล็อกอินด้วย Admin) -->
+                ${currentUserRole === 'admin' ? `
+                <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-gray-100">
+                  <button 
+                    onclick="openProductModal(${p.id})" 
+                    class="py-1 px-2 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition cursor-pointer"
+                    title="แก้ไขสินค้า (เฉพาะ Admin)"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <span>แก้ไข</span>
+                  </button>
+                  <button 
+                    onclick="openDeleteModal(${p.id})" 
+                    class="py-1 px-2 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition cursor-pointer"
+                    title="ลบสินค้า (เฉพาะ Admin)"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    <span>ลบ</span>
+                  </button>
+                </div>
+                ` : ''}
               </div>
             </div>
           </div>
@@ -587,7 +940,7 @@
       }
 
       elements.bestSeller.innerHTML = top3.map((p, i) => `
-        <div onclick="addToCart('${escapeHtml(p.name)}', false)" class="bg-white rounded-xl p-2.5 flex items-center gap-3 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition relative">
+        <div onclick="addToCart(${p.id}, false)" class="bg-white rounded-xl p-2.5 flex items-center gap-3 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition relative">
           <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-mercular-dark border-2 border-white text-white text-[10px] font-bold flex items-center justify-center shadow-sm">
             ${i + 1}
           </div>
@@ -602,17 +955,234 @@
       `).join('');
     }
 
-    // Cart and Wishlist interactions
-    function addToCart(productName, outOfStock) {
-      if (outOfStock) {
-        showToast(`สินค้า "${productName}" หมดชั่วคราว`, 'error');
+    // ==========================================
+    // 🛒 Shopping Cart System (ระบบตะกร้าสินค้าเต็มรูปแบบ)
+    // ==========================================
+    function saveCart() {
+      localStorage.setItem('thibest_cart', JSON.stringify(cartItems));
+    }
+
+    function loadCart() {
+      try {
+        const saved = localStorage.getItem('thibest_cart');
+        if (saved) {
+          cartItems = JSON.parse(saved);
+        } else {
+          cartItems = [];
+        }
+      } catch (e) {
+        cartItems = [];
+      }
+      updateCartBadge();
+    }
+
+    function updateCartBadge() {
+      const totalQty = cartItems.reduce((acc, item) => acc + (Number(item.quantity) || 1), 0);
+      if (elements.cartBadge) {
+        elements.cartBadge.textContent = totalQty;
+        elements.cartBadge.classList.add('scale-125');
+        setTimeout(() => elements.cartBadge.classList.remove('scale-125'), 200);
+      }
+      const subtitle = document.getElementById('cartCountSubtitle');
+      if (subtitle) {
+        subtitle.textContent = `${totalQty} ชิ้น (${cartItems.length} รายการ)`;
+      }
+    }
+
+    function openCartDrawer() {
+      const drawer = document.getElementById('cartDrawer');
+      if (!drawer) return;
+      renderCartItems();
+      drawer.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCartDrawer() {
+      const drawer = document.getElementById('cartDrawer');
+      if (!drawer) return;
+      drawer.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    function renderCartItems() {
+      const container = document.getElementById('cartItemsContainer');
+      const footer = document.getElementById('cartFooter');
+      if (!container) return;
+
+      if (cartItems.length === 0) {
+        container.innerHTML = `
+          <div class="h-full min-h-[300px] flex flex-col items-center justify-center text-center py-10 px-4">
+            <div class="w-20 h-20 bg-blue-50 text-mercular-blue rounded-full flex items-center justify-center text-3xl mb-4 shadow-inner">
+              🛒
+            </div>
+            <h4 class="text-base font-bold text-slate-800 mb-1">ยังไม่มีสินค้าในตะกร้า</h4>
+            <p class="text-xs text-gray-500 max-w-xs mb-6">คุณยังไม่ได้เพิ่มสินค้าใดๆ ลองเลือกช้อปเสื้อผ้าแฟชั่นสไตล์ที่คุณชอบได้เลย</p>
+            <button onclick="closeCartDrawer()" class="bg-mercular-blue hover:bg-mercular-dark text-white px-6 py-2.5 rounded-full text-xs font-semibold shadow-md transition cursor-pointer">
+              เลือกซื้อสินค้าเลย
+            </button>
+          </div>
+        `;
+        if (footer) footer.classList.add('hidden');
         return;
       }
-      cartCount++;
-      elements.cartBadge.textContent = cartCount;
-      elements.cartBadge.classList.add('scale-125');
-      setTimeout(() => elements.cartBadge.classList.remove('scale-125'), 200);
-      showToast(`เพิ่ม "${productName}" ลงตะกร้าแล้ว (รวม ${cartCount} ชิ้น)`, 'success');
+
+      if (footer) footer.classList.remove('hidden');
+
+      let subtotal = 0;
+      container.innerHTML = cartItems.map(item => {
+        const itemSubtotal = Number(item.price) * (Number(item.quantity) || 1);
+        subtotal += itemSubtotal;
+        const img = item.image_url || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200&q=80';
+
+        return `
+          <div class="flex items-center gap-3.5 py-3.5 border-b border-gray-100 last:border-b-0 animate-in fade-in duration-200">
+            <div class="w-16 h-16 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-200/60 p-1 flex items-center justify-center">
+              <img src="${img}" alt="${escapeHtml(item.name)}" class="w-full h-full object-contain mix-blend-multiply" onerror="this.src='https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=200&q=80'">
+            </div>
+            
+            <div class="flex-1 min-w-0">
+              <h4 class="text-xs font-bold text-slate-800 truncate mb-0.5 leading-snug" title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</h4>
+              <p class="text-[11px] text-gray-400 mb-1">${escapeHtml(item.category || '')} • Size ${escapeHtml(item.size || 'M')}</p>
+              <div class="text-xs font-bold text-rose-500">฿${Number(item.price).toLocaleString()}</div>
+            </div>
+
+            <!-- Quantity & Actions -->
+            <div class="flex flex-col items-end gap-1.5 flex-shrink-0">
+              <div class="flex items-center border border-gray-200 rounded-lg bg-gray-50 overflow-hidden shadow-xs">
+                <button type="button" onclick="changeCartItemQuantity(${item.id}, -1)" class="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition font-bold text-xs cursor-pointer">-</button>
+                <span class="w-7 text-center text-xs font-bold text-slate-800">${item.quantity}</span>
+                <button type="button" onclick="changeCartItemQuantity(${item.id}, 1)" class="w-6 h-6 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition font-bold text-xs cursor-pointer">+</button>
+              </div>
+              <button type="button" onclick="removeFromCart(${item.id})" class="text-[11px] text-gray-400 hover:text-rose-500 transition cursor-pointer flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                <span>ลบ</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('cartSubtotal').textContent = `฿${subtotal.toLocaleString()}`;
+      document.getElementById('cartTotal').textContent = `฿${subtotal.toLocaleString()}`;
+    }
+
+    function addToCart(target, outOfStock) {
+      if (outOfStock) {
+        showToast('สินค้าหมดชั่วคราว ไม่สามารถเพิ่มลงในตะกร้าได้', 'error');
+        return;
+      }
+
+      let prod = null;
+      if (typeof target === 'number' || !isNaN(Number(target))) {
+        prod = allProductsData.find(p => Number(p.id) === Number(target));
+      } else if (typeof target === 'string') {
+        prod = allProductsData.find(p => p.name === target);
+      } else if (target && typeof target === 'object') {
+        prod = target;
+      }
+
+      if (!prod) {
+        showToast('ไม่พบข้อมูลสินค้านี้', 'error');
+        return;
+      }
+
+      if (Number(prod.stock) <= 0) {
+        showToast(`สินค้า "${prod.name}" หมดชั่วคราว`, 'error');
+        return;
+      }
+
+      const existingIndex = cartItems.findIndex(item => Number(item.id) === Number(prod.id));
+      if (existingIndex > -1) {
+        if (cartItems[existingIndex].quantity >= Number(prod.stock)) {
+          showToast(`สินค้า "${prod.name}" มีจำนวนในตะกร้าเท่ากับสต็อกคงเหลือแล้ว (${prod.stock} ชิ้น)`, 'info');
+          return;
+        }
+        cartItems[existingIndex].quantity += 1;
+      } else {
+        cartItems.push({
+          id: prod.id,
+          name: prod.name,
+          category: prod.category,
+          size: prod.size || 'M',
+          price: Number(prod.price),
+          image_url: prod.image_url || '',
+          stock: Number(prod.stock),
+          quantity: 1
+        });
+      }
+
+      saveCart();
+      updateCartBadge();
+
+      const drawer = document.getElementById('cartDrawer');
+      if (drawer && !drawer.classList.contains('hidden')) {
+        renderCartItems();
+      }
+
+      showToast(`เพิ่ม "${prod.name}" ลงในตะกร้าเรียบร้อยแล้ว`, 'success');
+    }
+
+    function changeCartItemQuantity(id, delta) {
+      const idx = cartItems.findIndex(i => Number(i.id) === Number(id));
+      if (idx === -1) return;
+
+      const current = cartItems[idx];
+      const newQty = (current.quantity || 1) + delta;
+
+      if (newQty <= 0) {
+        removeFromCart(id);
+        return;
+      }
+
+      if (current.stock && newQty > current.stock) {
+        showToast(`จำนวนสินค้าเกินสต็อกที่มี (${current.stock} ชิ้น)`, 'info');
+        return;
+      }
+
+      cartItems[idx].quantity = newQty;
+      saveCart();
+      updateCartBadge();
+      renderCartItems();
+    }
+
+    function removeFromCart(id) {
+      const item = cartItems.find(i => Number(i.id) === Number(id));
+      cartItems = cartItems.filter(i => Number(i.id) !== Number(id));
+      saveCart();
+      updateCartBadge();
+      renderCartItems();
+      if (item) {
+        showToast(`นำ "${item.name}" ออกจากตะกร้าแล้ว`, 'info');
+      }
+    }
+
+    function clearCart() {
+      if (cartItems.length === 0) return;
+      if (!confirm('คุณต้องการล้างสินค้าทั้งหมดในตะกร้าใช่หรือไม่?')) return;
+      cartItems = [];
+      saveCart();
+      updateCartBadge();
+      renderCartItems();
+      showToast('ล้างตะกร้าสินค้าเรียบร้อยแล้ว', 'info');
+    }
+
+    function checkoutCart() {
+      if (cartItems.length === 0) {
+        showToast('กรุณาเลือกสินค้าลงตะกร้าก่อนทำการสั่งซื้อ', 'error');
+        return;
+      }
+
+      const totalAmount = cartItems.reduce((sum, item) => sum + (Number(item.price) * (Number(item.quantity) || 1)), 0);
+      const totalCount = cartItems.reduce((sum, item) => sum + (Number(item.quantity) || 1), 0);
+
+      // เคลียร์ตะกร้าหลังสั่งซื้อ
+      cartItems = [];
+      saveCart();
+      updateCartBadge();
+      renderCartItems();
+      closeCartDrawer();
+
+      showToast(`🎉 สั่งซื้อสินค้าสำเร็จ (${totalCount} ชิ้น) ยอดชำระ ฿${totalAmount.toLocaleString()} ขอบคุณที่ใช้บริการ!`, 'success');
     }
 
     function toggleWishlist(e, btn) {
@@ -632,44 +1202,499 @@
       }
     }
 
-    // Login Modal Handlers
-    function openLoginModal() {
+    // Session & User Auth Handlers
+    function checkUserSession() {
+      try {
+        const saved = localStorage.getItem('thibest_user');
+        if (saved) {
+          const userData = JSON.parse(saved);
+          currentUser = userData.name || userData.username;
+          currentUserRole = userData.role || (currentUser === 'admin' ? 'admin' : 'customer');
+          updateAuthUI(userData.email || `${currentUser}@example.com`);
+        } else {
+          currentUserRole = null;
+          updateAuthUI();
+        }
+      } catch (e) {
+        localStorage.removeItem('thibest_user');
+        currentUserRole = null;
+        updateAuthUI();
+      }
+    }
+
+    function setUserState(name, email = '', role = 'customer') {
+      currentUser = name;
+      currentUserRole = role;
+      const userData = {
+        name: currentUser,
+        email: email || `${currentUser}@example.com`,
+        role: currentUserRole
+      };
+      localStorage.setItem('thibest_user', JSON.stringify(userData));
+      updateAuthUI(userData.email);
+      renderProducts(allProductsData); // รีเรนเดอร์เพื่อแสดง/ซ่อนปุ่มแก้ไขตามสิทธิ์
+    }
+
+    function updateAuthUI(email = '') {
+      if (currentUser) {
+        if (elements.guestAuthGroup) {
+          elements.guestAuthGroup.classList.add('hidden');
+          elements.guestAuthGroup.style.display = 'none';
+        }
+        if (elements.loginBtn) {
+          elements.loginBtn.classList.add('hidden');
+          elements.loginBtn.style.display = 'none';
+        }
+        if (elements.btnRegister) {
+          elements.btnRegister.classList.add('hidden');
+          elements.btnRegister.style.display = 'none';
+        }
+        elements.userProfileMenu.classList.remove('hidden');
+        elements.btnQuickLogout.classList.remove('hidden');
+
+        document.getElementById('userNameDisplay').textContent = currentUser;
+        document.getElementById('dropdownUserEmail').textContent = email || `${currentUser}@example.com`;
+
+        // ตัวอักษรย่อสำหรับ Avatar
+        const initial = (currentUserRole === 'admin') ? '👑' : (currentUser.replace(/[^a-zA-Z0-9ก-๙]/g, '').charAt(0).toUpperCase() || '👤');
+        document.getElementById('userAvatarText').textContent = initial;
+
+        const roleBadge = document.getElementById('userRoleBadge');
+        if (roleBadge) {
+          if (currentUserRole === 'admin') {
+            roleBadge.className = 'inline-flex items-center gap-1 mt-1 text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full';
+            roleBadge.innerHTML = '<span>👑</span><span>ผู้ดูแลระบบ (Admin)</span>';
+          } else {
+            roleBadge.className = 'inline-flex items-center gap-1 mt-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full';
+            roleBadge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span>ลูกค้าทั่วไป (Customer)</span>';
+          }
+        }
+
+        // ปุ่มเพิ่มสินค้าแสดงเฉพาะ Admin
+        if (elements.btnAddProduct) {
+          if (currentUserRole === 'admin') {
+            elements.btnAddProduct.classList.remove('hidden');
+            elements.btnAddProduct.classList.add('flex');
+          } else {
+            elements.btnAddProduct.classList.add('hidden');
+            elements.btnAddProduct.classList.remove('flex');
+          }
+        }
+      } else {
+        if (elements.guestAuthGroup) {
+          elements.guestAuthGroup.classList.remove('hidden');
+          elements.guestAuthGroup.style.display = '';
+        }
+        if (elements.loginBtn) {
+          elements.loginBtn.classList.remove('hidden');
+          elements.loginBtn.style.display = '';
+        }
+        if (elements.btnRegister) {
+          elements.btnRegister.classList.remove('hidden');
+          elements.btnRegister.style.display = '';
+        }
+        elements.userProfileMenu.classList.add('hidden');
+        elements.btnQuickLogout.classList.add('hidden');
+        if (elements.btnAddProduct) {
+          elements.btnAddProduct.classList.add('hidden');
+          elements.btnAddProduct.classList.remove('flex');
+        }
+        if (elements.userDropdown) {
+          elements.userDropdown.classList.add('hidden');
+        }
+        const chevron = document.getElementById('userMenuChevron');
+        if (chevron) chevron.classList.remove('rotate-180');
+      }
+    }
+
+    function toggleUserDropdown(e) {
+      if (e) e.stopPropagation();
+      if (!elements.userDropdown) return;
+
+      const isHidden = elements.userDropdown.classList.toggle('hidden');
+      const chevron = document.getElementById('userMenuChevron');
+      if (chevron) {
+        if (!isHidden) {
+          chevron.classList.add('rotate-180');
+        } else {
+          chevron.classList.remove('rotate-180');
+        }
+      }
+    }
+
+    // ปิด Dropdown อัตโนมัติเมื่อคลิกที่อื่นนอกเมนู
+    document.addEventListener('click', (e) => {
+      if (elements.userProfileMenu && !elements.userProfileMenu.contains(e.target)) {
+        if (elements.userDropdown && !elements.userDropdown.classList.contains('hidden')) {
+          elements.userDropdown.classList.add('hidden');
+          const chevron = document.getElementById('userMenuChevron');
+          if (chevron) chevron.classList.remove('rotate-180');
+        }
+      }
+    });
+
+    // Auth Modal Handlers (Login / Register Tabs สไตล์ Mercular)
+    let currentAuthTab = 'register';
+
+    function openLoginModal(tab = 'register') {
       elements.loginModal.classList.remove('hidden');
-      document.getElementById('loginUsername').focus();
+      switchAuthTab(tab);
     }
 
     function closeLoginModal() {
       elements.loginModal.classList.add('hidden');
     }
 
-    function handleLoginSubmit(e) {
+    function handleAuthBack() {
+      if (currentAuthTab === 'register') {
+        switchAuthTab('login');
+      } else {
+        closeLoginModal();
+      }
+    }
+
+    function switchAuthTab(tab) {
+      currentAuthTab = tab;
+      const tabLoginBtn = document.getElementById('tabLoginBtn');
+      const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const authTitle = document.getElementById('authModalTitle');
+
+      if (tab === 'register') {
+        authTitle.textContent = 'สมัครสมาชิกด้วยอีเมล';
+        tabRegisterBtn.className = 'flex-1 py-3 text-center transition-colors border-b-2 border-blue-600 text-blue-600 font-bold cursor-pointer';
+        tabLoginBtn.className = 'flex-1 py-3 text-center transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-800 cursor-pointer';
+        registerForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        document.getElementById('regEmail').focus();
+      } else {
+        authTitle.textContent = 'เข้าสู่ระบบด้วยอีเมล';
+        tabLoginBtn.className = 'flex-1 py-3 text-center transition-colors border-b-2 border-blue-600 text-blue-600 font-bold cursor-pointer';
+        tabRegisterBtn.className = 'flex-1 py-3 text-center transition-colors border-b-2 border-transparent text-gray-500 hover:text-gray-800 cursor-pointer';
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        document.getElementById('loginUsername').focus();
+      }
+    }
+
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+
+      // สลับไอคอนแสดง/ซ่อนรหัสผ่าน
+      if (isPassword) {
+        btn.innerHTML = `
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+        `;
+      } else {
+        btn.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>
+          </svg>
+        `;
+      }
+    }
+
+    async function handleRegisterSubmit(e) {
       e.preventDefault();
-      const user = document.getElementById('loginUsername').value.trim();
-      currentUser = user.split('@')[0];
+      const email = document.getElementById('regEmail').value.trim();
+      const phone = document.getElementById('regPhone').value.trim();
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      const terms = document.getElementById('regTermsCheck').checked;
 
-      // Update header button to show logged in state
-      elements.loginBtn.innerHTML = `
-        <span class="w-6 h-6 rounded-full bg-white text-mercular-blue font-bold text-xs flex items-center justify-center">👤</span>
-        <span>สวัสดี, ${escapeHtml(currentUser)}</span>
-      `;
-      elements.loginBtn.onclick = () => showToast(`คุณเข้าสู่ระบบในชื่อ ${escapeHtml(currentUser)} แล้ว`, 'info');
+      if (!terms) {
+        showToast('กรุณายอมรับข้อตกลงและเงื่อนไข', 'error');
+        return;
+      }
 
-      closeLoginModal();
-      showToast(`เข้าสู่ระบบสำเร็จ ยินดีต้อนรับคุณ ${currentUser}!`, 'success');
+      if (password !== confirmPassword) {
+        showToast('รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, phone, password, confirmPassword })
+        });
+        const result = await res.json();
+
+        if (result.success && result.data) {
+          const u = result.data;
+          setUserState(u.full_name || u.username, u.email, u.role || 'customer');
+          closeLoginModal();
+          showToast(`🎉 สมัครสมาชิกสำเร็จ ยินดีต้อนรับคุณ ${u.full_name || u.username}!`, 'success');
+          document.getElementById('registerForm').reset();
+        } else {
+          showToast(result.message || 'เกิดข้อผิดพลาดในการสมัครสมาชิก', 'error');
+        }
+      } catch (err) {
+        console.error('Register error:', err);
+        showToast('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้', 'error');
+      }
     }
 
-    function quickSocialLogin(provider) {
-      currentUser = `${provider}_User`;
-      elements.loginBtn.innerHTML = `
-        <span class="w-6 h-6 rounded-full bg-white text-mercular-blue font-bold text-xs flex items-center justify-center">👤</span>
-        <span>${escapeHtml(currentUser)}</span>
-      `;
-      elements.loginBtn.onclick = () => showToast(`เข้าสู่ระบบผ่าน ${provider} แล้ว`, 'info');
-      closeLoginModal();
-      showToast(`เข้าสู่ระบบด้วย ${provider} สำเร็จ!`, 'success');
+    async function handleLoginSubmit(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById('loginUsername').value.trim();
+      const passwordInput = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: usernameInput, password: passwordInput })
+        });
+        const result = await res.json();
+
+        if (result.success && result.data) {
+          const displayName = result.data.full_name || result.data.username;
+          const userRole = result.data.role || (result.data.username === 'admin' ? 'admin' : 'customer');
+          setUserState(displayName, result.data.email, userRole);
+          closeLoginModal();
+          showToast(`เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ${userRole === 'admin' ? '👑 ผู้ดูแลระบบ (Admin)' : 'คุณ'} ${displayName}!`, 'success');
+          return;
+        } else {
+          showToast(result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง', 'error');
+          return;
+        }
+      } catch (err) {
+        console.error('Login error:', err);
+        showToast('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้', 'error');
+      }
     }
 
-    // Toast Notification System
+    // ฟังก์ชันออกจากระบบ (Logout)
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } catch (e) {
+        // ignore network error on logout
+      }
+
+      const prevUser = currentUser;
+      currentUser = null;
+      currentUserRole = null;
+      localStorage.removeItem('thibest_user');
+      updateAuthUI();
+      renderProducts(allProductsData); // รีเรนเดอร์เพื่อซ่อนปุ่มแก้ไข/ลบ
+
+      showToast(`ออกจากระบบเรียบร้อยแล้ว แล้วพบกันใหม่คุณ ${prevUser || ''}!`, 'info');
+    }
+
+    // ==========================================
+    // 🛠️ CRUD Handlers สำหรับการสาธิต (Create, Read, Update, Delete)
+    // ==========================================
+    function openProductModal(id = null) {
+      // ตรวจสอบเงื่อนไขว่าต้องเป็น admin เท่านั้น
+      if (currentUserRole !== 'admin') {
+        showToast('⚠️ สิทธิ์ไม่เพียงพอ: กรุณาเข้าสู่ระบบด้วย admin เพื่อเพิ่มหรือแก้ไขสินค้า', 'error');
+        openLoginModal();
+        return;
+      }
+      const modal = elements.productModal;
+      const form = elements.productForm;
+      const title = document.getElementById('prodModalTitle');
+      const icon = document.getElementById('prodModalIcon');
+      const submitBtn = document.getElementById('prodSubmitBtn');
+
+      if (id) {
+        // โหมด Update (แก้ไขสินค้า)
+        const product = allProductsData.find(p => Number(p.id) === Number(id));
+        if (!product) {
+          showToast('ไม่พบข้อมูลสินค้านี้', 'error');
+          return;
+        }
+
+        title.textContent = `แก้ไขสินค้า: ${product.name} `;
+        icon.textContent = '✏️';
+        submitBtn.innerHTML = '💾 บันทึกการแก้ไข';
+
+        document.getElementById('prodId').value = product.id;
+        document.getElementById('prodName').value = product.name;
+        document.getElementById('prodCategory').value = product.category;
+        document.getElementById('prodSize').value = product.size || 'M';
+        document.getElementById('prodPrice').value = product.price;
+        document.getElementById('prodStock').value = product.stock;
+        document.getElementById('prodImage').value = product.image_url || '';
+        document.getElementById('prodDesc').value = product.description || '';
+      } else {
+        // โหมด Create (เพิ่มสินค้าใหม่)
+        title.textContent = 'เพิ่มสินค้าใหม่';
+        icon.textContent = '📦';
+        submitBtn.innerHTML = '➕ เพิ่มสินค้า';
+
+        form.reset();
+        document.getElementById('prodId').value = '';
+        document.getElementById('prodSize').value = 'M';
+        document.getElementById('prodStock').value = '10';
+      }
+
+      modal.classList.remove('hidden');
+      document.getElementById('prodName').focus();
+    }
+
+    function closeProductModal() {
+      elements.productModal.classList.add('hidden');
+      elements.productForm.reset();
+    }
+
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+
+      if (currentUserRole !== 'admin') {
+        showToast('⚠️ สิทธิ์ไม่เพียงพอ: ต้องเข้าสู่ระบบด้วย admin เท่านั้น', 'error');
+        return;
+      }
+
+      const prodId = document.getElementById('prodId').value;
+      const isEdit = Boolean(prodId);
+
+      const payload = {
+        name: document.getElementById('prodName').value.trim(),
+        category: document.getElementById('prodCategory').value,
+        size: document.getElementById('prodSize').value,
+        price: Number(document.getElementById('prodPrice').value),
+        stock: parseInt(document.getElementById('prodStock').value),
+        image_url: document.getElementById('prodImage').value.trim(),
+        description: document.getElementById('prodDesc').value.trim()
+      };
+
+      // Frontend Input Validation เพิ่มเติม
+      if (!payload.name) {
+        showToast('กรุณากรอกชื่อสินค้า', 'error');
+        return;
+      }
+      if (isNaN(payload.price) || payload.price <= 0) {
+        showToast('ราคาต้องเป็นตัวเลขที่มากกว่า 0', 'error');
+        return;
+      }
+      if (isNaN(payload.stock) || payload.stock < 0) {
+        showToast('จำนวนสต็อกต้องเป็นตัวเลข 0 ขึ้นไป', 'error');
+        return;
+      }
+
+      try {
+        const url = isEdit ? `/api/products/${prodId}` : '/api/products';
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            'x-user-role': currentUserRole || 'customer'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          showToast(isEdit ? 'อัปเดตข้อมูลสินค้าเรียบร้อยแล้ว' : 'เพิ่มสินค้าใหม่เรียบร้อยแล้ว', 'success');
+          closeProductModal();
+          fetchProducts(); // โหลดรายการสินค้าใหม่ (Read)
+        } else {
+          showToast(result.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', 'error');
+        }
+      } catch (err) {
+        console.error('Error submitting product:', err);
+        showToast('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้', 'error');
+      }
+    }
+
+    // ==========================================
+    // 🗑️ Delete Product System (แก้ไขปัญหาลบไม่ได้ด้วย Modal ยืนยัน)
+    // ==========================================
+    let pendingDeleteId = null;
+
+    function openDeleteModal(id) {
+      if (currentUserRole !== 'admin') {
+        showToast('⚠️ สิทธิ์ไม่เพียงพอ: เฉพาะผู้ดูแลระบบ (Admin) เท่านั้นที่สามารถลบสินค้าได้', 'error');
+        return;
+      }
+
+      const product = allProductsData.find(p => Number(p.id) === Number(id));
+      if (!product) {
+        showToast('ไม่พบข้อมูลสินค้านี้', 'error');
+        return;
+      }
+
+      pendingDeleteId = id;
+      document.getElementById('delProdName').textContent = `"${product.name}"`;
+      document.getElementById('delProdId').textContent = product.id;
+      document.getElementById('delProdTitle').textContent = product.name;
+      document.getElementById('delProdPrice').textContent = `฿${Number(product.price).toLocaleString()}`;
+      document.getElementById('delProdImg').src = product.image_url || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=100&q=80';
+
+      const modal = document.getElementById('deleteModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+      pendingDeleteId = null;
+      const modal = document.getElementById('deleteModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    async function executeDeleteProduct() {
+      if (!pendingDeleteId) return;
+      const id = pendingDeleteId;
+      const product = allProductsData.find(p => Number(p.id) === Number(id));
+      const prodName = product ? product.name : `ID: ${id}`;
+      const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+      try {
+        if (confirmBtn) {
+          confirmBtn.disabled = true;
+          confirmBtn.innerHTML = '<span>กำลังลบ...</span>';
+        }
+
+        const res = await fetch(`/api/products/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'x-user-role': currentUserRole || 'customer'
+          }
+        });
+        const result = await res.json();
+
+        if (result.success) {
+          // ลบออกจาก allProductsData ฝั่ง client ทันทีเพื่อให้ UI ตอบสนองทันที
+          allProductsData = allProductsData.filter(p => Number(p.id) !== Number(id));
+          renderProducts(allProductsData);
+          if (currentCategory === 'ทั้งหมด' && !searchQuery) {
+            renderBestSeller(allProductsData);
+          }
+
+          closeDeleteModal();
+          showToast(`ลบสินค้า "${prodName}" เรียบร้อยแล้ว`, 'success');
+
+          // โหลดข้อมูลล่าสุดจากฐานข้อมูล MySQL เพื่อความแม่นยำ
+          fetchProducts();
+        } else {
+          showToast(result.message || 'ไม่สามารถลบสินค้าได้', 'error');
+        }
+      } catch (err) {
+        console.error('Delete product error:', err);
+        showToast('เกิดข้อผิดพลาดในการส่งคำขอลบสินค้า', 'error');
+      } finally {
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = '<span>ลบสินค้า</span>';
+        }
+      }
+    }
+
+    // ==========================================
+    // 🛡️ Toast Notification System (ป้องกัน XSS ด้วย textContent 100%)
+    // ==========================================
     function showToast(msg, type = 'success') {
       const c = document.getElementById('toastContainer');
       const t = document.createElement('div');
@@ -685,7 +1710,16 @@
       }
 
       t.className = `flex items-center gap-2.5 px-4 py-3 rounded-xl shadow-xl text-xs sm:text-sm font-medium border ${borderCol} pointer-events-auto transition-all duration-300 transform translate-y-2 opacity-0`;
-      t.innerHTML = `<span>${icon}</span><span>${escapeHtml(msg)}</span>`;
+
+      // การป้องกันการแสดงผลสคริปต์อันตราย (Basic XSS Prevention): ใช้ .textContent เสมอ
+      const iconSpan = document.createElement('span');
+      iconSpan.textContent = icon;
+
+      const textSpan = document.createElement('span');
+      textSpan.textContent = msg; // ป้องกัน XSS โดยแปลงอักขระพิเศษเป็นข้อความธรรมดา
+
+      t.appendChild(iconSpan);
+      t.appendChild(textSpan);
       c.appendChild(t);
 
       requestAnimationFrame(() => {

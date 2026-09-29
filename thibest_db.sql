@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `username` VARCHAR(100) NOT NULL UNIQUE,
   `email` VARCHAR(150) NOT NULL UNIQUE,
+  `phone` VARCHAR(50) DEFAULT NULL,
   `password` VARCHAR(255) NOT NULL,
   `full_name` VARCHAR(150) DEFAULT NULL,
   `role` ENUM('customer', 'admin') DEFAULT 'customer',
@@ -94,11 +95,11 @@ INSERT INTO `categories` (`name`, `icon`) VALUES
 ('อุปกรณ์เสริม', '🧢')
 ON DUPLICATE KEY UPDATE `name`=`name`;
 
--- เพิ่มผู้ใช้งานตัวอย่าง
+-- เพิ่มผู้ใช้งานตัวอย่าง (รหัสผ่านผ่านการ Hash ด้วย bcrypt ป้องกัน Plaintext 100%)
 INSERT INTO `users` (`username`, `email`, `password`, `full_name`, `role`) VALUES
-('admin', 'admin@thibest.com', 'admin1234', 'ผู้ดูแลระบบ Thibest', 'admin'),
-('userdemo', 'customer@gmail.com', 'user1234', 'คุณสมชาย ใจดี', 'customer')
-ON DUPLICATE KEY UPDATE `username`=`username`;
+('admin', 'admin@thibest.com', '$2b$10$GY8F6O.OXl82TiwZiGrR/OMdACTIDOAXf2SJzidr/B5g.68d5jJsi', 'ผู้ดูแลระบบ Thibest', 'admin'),
+('userdemo', 'customer@gmail.com', '$2b$10$ikgITvhM6Z.nfjNSyRYNnezN.Qp85JafXVxhMQC8gp5Iwi55tHxM6', 'คุณสมชาย ใจดี', 'customer')
+ON DUPLICATE KEY UPDATE `password`=VALUES(`password`), `full_name`=VALUES(`full_name`);
 
 -- เพิ่มสินค้าเสื้อผ้าตัวอย่าง 6 รายการ
 INSERT INTO `products` (`id`, `name`, `category`, `price`, `size`, `stock`, `image_url`, `description`) VALUES
